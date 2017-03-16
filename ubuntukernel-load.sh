@@ -8,7 +8,7 @@
 
 # kernel modules to add to the Scaleway initrd to allow Ubuntu kernel to mount
 # nbd devices. Path prefix is /lib/modules/<kernel version>
-REQUIRED_MODULES="net/virtio_net block/virtio_blk"
+REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd"
 
 # Scaleway kernel/initrd HTTP mirror
 SCW_MIRROR="http://mirror.scaleway.com/initrd"
