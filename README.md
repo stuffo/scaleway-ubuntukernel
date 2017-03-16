@@ -22,7 +22,7 @@ Install
    ``apt install ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``
 3. Install this package:  
    ``apt install ./scaleway-ubuntukernel_1.0-1_amd64.deb ``
-4. Disable Ubuntu kexec service (required as Ubuntu will kexec to early for us and leave us with a dirty filesystem)  
+4. Disable Ubuntu kexec service (required as Ubuntu will kexec too early and leave a dirty filesystem)  
    `` systemctl disable kexec ``
 5. Reboot. That's it. Your system will kexec into your Ubuntu kernel on startup.
    
