@@ -6,7 +6,7 @@ Quick Install
 1. You need a Scaleway base kernel that has KEXEC support. E.g. 4.8.14 std #2. You can adjust this via
    the bootscript setting in the Advanced section of the cloud.scaleway.com interface.
 2. Install some Ubuntu kernel. E.g. current kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:
-   `` curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb && sudo dpkg -i http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``  
+   `` curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb && sudo dpkg -i linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``  
 3. Install kexec-tools package and disable kexec, otherwise kexec gets executed to early:  
    ``systemctl disable kexec.service``
 4. Copy ubuntukernel-load.sh to /usr/bin/ 
