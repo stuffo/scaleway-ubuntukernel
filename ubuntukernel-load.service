@@ -1,12 +1,12 @@
 [Unit]
-Description=Reboot into Arch kernel
-ConditionKernelCommandLine=!archkernel
+Description=Reboot into Ubuntu kernel
+ConditionKernelCommandLine=!ubuntukernel
 DefaultDependencies=no
 Before=local-fs-pre.target systemd-remount-fs.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/archkernel-load.sh
+ExecStart=/usr/bin/ubuntukernel-load.sh
 
 [Install]
 WantedBy=sysinit.target

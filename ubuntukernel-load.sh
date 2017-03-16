@@ -81,7 +81,7 @@ EOF
     chmod 755 $initrd_dir/init
 
     log "+ rebuild initrd archive"
-    ( cd $initrd_dir && find . -print0 | cpio --quiet --null -o --format=newc | gzip -9 > /boot/uInitrd.gz )
+    ( cd $initrd_dir && find . -print0 | cpio --quiet --null -o --format=newc | gzip -9 > /boot/uInitrd-$UBUNTU_KERNEL_VERSION.gz )
 
     # record kernel version we just integrated into intird for later
     echo $UBUNTU_KERNEL_VERSION > $UBUNTU_KERNEL_STAMP
@@ -107,7 +107,8 @@ fixup_shutdown_initrd() {
 }
 
 get_kernel_version() {
-    UBUNTU_KERNEL_VERSION=$(dpkg -l "linux-image*"|grep ^ii|awk '{print $2}'|cut -f3- -d-)
+    # last linux-image-* package in the list is the current kernel
+    UBUNTU_KERNEL_VERSION=$(dpkg -l "linux-image*"|grep ^ii| tail -1 |awk '{print $2}'|cut -f3- -d-)
     if [ -r $UBUNTU_KERNEL_STAMP ] ; then
         INITRD_KERNEL_VERSION=$(cat $UBUNTU_KERNEL_STAMP)
     fi
@@ -142,5 +143,5 @@ fi
 # for a kexeced environment 
 log "Kexec engaged. Make it So!"
 kexec -l /boot/vmlinuz-$UBUNTU_KERNEL_VERSION \
-    --initrd=/boot/uInitrd.gz \
+    --initrd=/boot/uInitrd-$UBUNTU_KERNEL_VERSION.gz \
     --command-line="$(cat /proc/cmdline) is_in_kexec=yes NO_SIGNAL_STATE=1 DONT_FETCH_KERNEL_MODULES=1 NO_NTPDATE=1 ubuntukernel" && systemctl kexec
