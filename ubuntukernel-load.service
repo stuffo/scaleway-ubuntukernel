@@ -1,0 +1,12 @@
+[Unit]
+Description=Reboot into Arch kernel
+ConditionKernelCommandLine=!archkernel
+DefaultDependencies=no
+Before=local-fs-pre.target systemd-remount-fs.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/archkernel-load.sh
+
+[Install]
+WantedBy=sysinit.target
