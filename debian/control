@@ -1,0 +1,13 @@
+Source: scaleway-ubuntukernel
+Section: unknown
+Priority: optional
+Maintainer: root <root@unknown>
+Build-Depends: debhelper (>=9), dh-systemd (>= 1.5)
+Standards-Version: 3.9.6
+Homepage: https://github.com/stuffo/scaleway-ubuntukernel
+
+Package: scaleway-ubuntukernel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools (>= 1:2.0.10), linux-image 
+Description: Run standard Ubuntu Kernels on Scaleway x86_64 Ubuntu instances
+ <insert long description, indented with spaces>

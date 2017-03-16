@@ -1,0 +1,8 @@
+scaleway-ubuntukernel for Debian
+-------------------------------
+
+Make sure kexec service is disabled (systemctl disable kexec). 
+
+Only rested on Scaleway VCS1 instances.
+
+ -- root <root@unknown>  Thu, 16 Mar 2017 15:52:21 +0000

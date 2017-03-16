@@ -1,0 +1,5 @@
+scaleway-ubuntukernel (1.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- root <root@unknown>  Thu, 16 Mar 2017 15:52:21 +0000

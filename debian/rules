@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+
+%:
+	dh $@ --with=systemd
+
+# avoid automatic starting as it will force a reboot
+override_dh_systemd_start: 
+	dh_systemd_start --no-start scaleway-ubuntukernel.service
+
+

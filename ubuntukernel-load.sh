@@ -10,8 +10,10 @@
 # nbd devices. Path prefix is /lib/modules/<kernel version>
 REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd"
 
-# current Scaleway IPXE boot script 
-SCW_IPXE_SCRIPT="http://169.254.42.42/ipxe"
+# Scaleway kernel/initrd HTTP mirror
+SCW_MIRROR="http://mirror.scaleway.com/initrd"
+# current Scaleway initrd for this architecture. Keep it up-to-date.
+SCW_INITRD="initrd-Linux-x86_64-v3.12.3"
 
 # where to account current Ubuntu kernel version
 UBUNTU_KERNEL_STAMP="/boot/.ubuntukernel-version"
@@ -43,8 +45,7 @@ fatal() {
 rebuild_initrd() {
     local workdir=$(mktemp -d)
 
-    # get original initrd url from IPXE
-    local orig_initrd=$(curl -s $SCW_IPXE_SCRIPT | grep ^initrd | cut -f2 -d" ")
+    local orig_initrd=$SCW_MIRROR/$SCW_INITRD.gz
     log "Scaleway initrd: $orig_initrd"
 
     log "+ get scaleway initrd"
