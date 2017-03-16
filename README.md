@@ -16,13 +16,13 @@ Install
 =======
 1. Make sure your system is up-to-date and get the Ubuntu package:  
    ``curl -O https://github.com/stuffo/scaleway-ubuntukernel/releases/download/v1.0/scaleway-ubuntukernel_1.0-1_amd64.deb ``
-2. You skip this step if you already installed any kernel package providing linux-image. Otherwise, get some Ubuntu kernel. 
-   E.g. current mainline kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:  
-   ``curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``
+2. You can skip this step if you already installed any kernel package providing linux-image. 
+   Otherwise, get some Ubuntu kernel. E.g. current mainline kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:  
+   ``curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``  
    ``apt install ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``
-3. Install this package and current kernel:
+3. Install this package:  
    ``apt install ./scaleway-ubuntukernel_1.0-1_amd64.deb ``
-4. Disable Ubuntu kexec service (required as it is incompatible with this)
+4. Disable Ubuntu kexec service (required as it is incompatible with this)  
    `` systemctl disable kexec && reboot ``
 
 Debugging
@@ -34,7 +34,7 @@ Build
 =====
 Make sure you have at least build-essential and devscripts installed.
 
-1. clone repo ``git clone``
+1. clone repo ``git clone https://github.com/stuffo/scaleway-ubuntukernel.git``
 2. run debuild to build debian package  
    ``debuild -i -us -uc -b``
 
