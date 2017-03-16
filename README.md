@@ -1,34 +1,45 @@
 Run standard Ubuntu Kernels on Scaleway x86_64 Ubuntu instances
 ===============================================================
 
+Scaleway is great but I've grown tired of theier old home-brewed kernels with
+missing modules and features. Why not use standard Ubuntu kernels instead? 
+With this package you can use standard Ubuntu kernels on your Scaleway x86_64
+instances by the magic of KEXEC. 
+
+Requirements
+============
+Just make sure your current Scaleway kernel has KEXEC support. 
+E.g. 4.8.14 std #2 bootscript. You can adjust this via the 
+bootscript setting in the Advanced section of the cloud.scaleway.com interface.
+
 Install
 =======
-1. get a the package:
-2. Get some Ubuntu kernel. E.g. current mainline kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:  
-   `` curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``
+1. Make sure your system is up-to-date and get the Ubuntu package:  
+   ``curl -O https://github.com/stuffo/scaleway-ubuntukernel/releases/download/v1.0/scaleway-ubuntukernel_1.0-1_amd64.deb ``
+2. You skip this step if you already installed any kernel package providing linux-image. Otherwise, get some Ubuntu kernel. 
+   E.g. current mainline kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:  
+   ``curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``
+   ``apt install ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``
 3. Install this package and current kernel:
-   `` apt install ./scaleway-ubuntukernel_1.0-1_amd64.deb ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``
+   ``apt install ./scaleway-ubuntukernel_1.0-1_amd64.deb ``
 4. Disable Ubuntu kexec service (required as it is incompatible with this)
    `` systemctl disable kexec && reboot ``
 
-Manual Install
-==============
-1. You need a Scaleway base kernel that has KEXEC support. E.g. 4.8.14 std #2. You can adjust this via
-   the bootscript setting in the Advanced section of the cloud.scaleway.com interface.
-2. Install some Ubuntu kernel. E.g. current kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:
-   `` curl -O http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb && sudo dpkg -i linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``  
-3. Install kexec-tools package and disable kexec, otherwise kexec gets executed to early:  
-   ``systemctl disable kexec.service``
-4. Copy ubuntukernel-load.sh to /usr/bin/ 
-5. Copy debian/scaleway-ubuntukernel.service to /etc/systemd/system/
-6. Enable ubuntukernel-load.service:
-   ``systemctl enable ubuntukernel-load.service``
-7. Reboot. System will reboot with the Scaleway kernel and kexec into the Ubuntu kernel while booting.
+Debugging
+=========
+You can run ubuntukernel-load.sh manually as root. It is quite verbose. Be 
+aware that your system will reboot (kexec) if all went fine.
+
+Build
+=====
+Make sure you have at least build-essential and devscripts installed.
+
+1. clone repo ``git clone``
+2. run debuild to build debian package  
+   ``debuild -i -us -uc -b``
 
 TODO
 ====
-* create deb package
-* automatically determine scaleway initrd version
 * account scaleway initrd version for automatic initrd regeneration on change
 
 
