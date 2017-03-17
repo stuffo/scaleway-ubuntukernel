@@ -6,9 +6,13 @@
 # Location: https://github.com/stuffo/scaleway-ubuntukernel
 #
 
+HOST_ARCH=$(uname -m)
+
 # kernel modules to add to the Scaleway initrd to allow Ubuntu kernel to mount
 # nbd devices. Path prefix is /lib/modules/<kernel version>
-REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd"
+declare -A REQUIRED_MODULES
+REQUIRED_MODULES[x86_64]="net/virtio_net block/virtio_blk block/nbd"
+REQUIRED_MODULES[armv7l]="net/ethernet/marvell/mvneta_bm net/ethernet/marvell/mvneta block/nbd"
 
 # current Scaleway IPXE boot script
 SCW_IPXE_SCRIPT="http://169.254.42.42/ipxe"
@@ -43,12 +47,32 @@ fatal() {
 rebuild_initrd() {
     local workdir=$(mktemp -d)
 
-    # get original initrd url from IPXE
-    local orig_initrd=$(curl -s $SCW_IPXE_SCRIPT | grep ^initrd | cut -f2 -d" ")
+    if [ $HOST_ARCH == "x86_64" ] ; then
+        # get original initrd url from IPXE
+        local orig_initrd=$(curl -s $SCW_IPXE_SCRIPT | grep ^initrd | cut -f2 -d" ")
+        log "+ get scaleway initrd"
+        curl -s -o $workdir/uInitrd.orig.gz $orig_initrd
+    elif [ $HOST_ARCH == "armv7l" ] ; then
+        local tftp_server=$(grep bootserver /proc/net/pnp | cut -f2 -d" ")
+        if [ -z "$tftp_server" ] ; then
+            tftp_server=10.1.31.34
+        fi
+        tftp -m binary $tftp_server -c get uboot.bootscript $workdir/uboot.bootscript
+
+        # XXX: maybe one day we can use scw-metadata to do this
+        dd if=$workdir/uboot.bootscript of=$workdir/uboot.bootscript.raw ibs=72 skip=1 2> /dev/null
+        local orig_initrd=$(grep 'tftp .* initrd/uInitrd-Linux-armv7l' $workdir/uboot.bootscript.raw |cut -f3 -d" ")
+        rm -f $workdir/uboot.bootscript $workdir/uboot.bootscript.raw
+        if [ -z "$orig_initrd" ] ; then
+            fatal "failed to get Scaleway initrd"
+        fi
+        log "+ get scaleway initrd"
+        tftp -m binary $tftp_server -c get $orig_initrd $workdir/uInitrd.orig
+        dd if=$workdir/uInitrd.orig of=$workdir/uInitrd.orig.gz ibs=64 skip=1 2> /dev/null
+        rm -f $workdir/uInitrd.orig
+    fi
     log "Scaleway initrd: $orig_initrd"
 
-    log "+ get scaleway initrd"
-    curl -s -o $workdir/uInitrd.orig.gz $orig_initrd
     log "+ extract scaleway initrd"
     local initrd_dir=$(mktemp -d initrd.XXXXXX)
     ( cd $initrd_dir && gunzip < $workdir/uInitrd.orig.gz | cpio -i --quiet > /dev/null )
@@ -59,7 +83,7 @@ rebuild_initrd() {
     local modname mod
     local initrd_mod_dir="$initrd_dir/lib/modules/$UBUNTU_KERNEL_VERSION"
     mkdir -p $initrd_mod_dir
-    for mod in $REQUIRED_MODULES ; do
+    for mod in ${REQUIRED_MODULES[$HOST_ARCH]} ; do
         log "+ add module $mod to initrd"
         modname=$(basename $mod).ko
         cp /lib/modules/$UBUNTU_KERNEL_VERSION/kernel/drivers/$mod.ko $initrd_mod_dir/$modname
@@ -106,8 +130,8 @@ fixup_shutdown_initrd() {
 }
 
 get_kernel_version() {
-    # last linux-image-* package in the list is the current kernel
-    UBUNTU_KERNEL_VERSION=$(dpkg -l "linux-image*"|grep ^ii| tail -1 |awk '{print $2}'|cut -f3- -d-)
+    # i guess /vmlinuz always points to the current kernel
+    UBUNTU_KERNEL_VERSION=$(readlink /vmlinuz | cut -f2- -d-)
     if [ -r $UBUNTU_KERNEL_STAMP ] ; then
         INITRD_KERNEL_VERSION=$(cat $UBUNTU_KERNEL_STAMP)
     fi

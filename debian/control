@@ -7,7 +7,7 @@ Standards-Version: 3.9.6
 Homepage: https://github.com/stuffo/scaleway-ubuntukernel
 
 Package: scaleway-ubuntukernel
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools (>= 1:2.0.10), linux-image 
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools (>= 1:2.0.10), linux-image, cpio, tftp-hpa
 Description: Run standard Ubuntu Kernels on Scaleway x86_64 Ubuntu instances
  <insert long description, indented with spaces>
