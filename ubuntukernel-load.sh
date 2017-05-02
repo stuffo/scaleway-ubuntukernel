@@ -106,8 +106,8 @@ fixup_shutdown_initrd() {
 }
 
 get_kernel_version() {
-    # last linux-image-* package in the list is the current kernel
-    UBUNTU_KERNEL_VERSION=$(dpkg -l "linux-image*"|grep ^ii| tail -1 |awk '{print $2}'|cut -f3- -d-)
+    # i guess /vmlinuz always points to the current kernel
+    UBUNTU_KERNEL_VERSION=$(readlink /vmlinuz | cut -f2- -d-)
     if [ -r $UBUNTU_KERNEL_STAMP ] ; then
         INITRD_KERNEL_VERSION=$(cat $UBUNTU_KERNEL_STAMP)
     fi
