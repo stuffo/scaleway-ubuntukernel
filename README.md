@@ -38,7 +38,7 @@ aware that your system will reboot (kexec) if all went fine.
 
 Build
 =====
-Make sure you have at least build-essential and devscripts installed.
+Make sure you have devscripts package installed.
 
 1. clone repo ``git clone https://github.com/stuffo/scaleway-ubuntukernel.git``
 2. run debuild to build debian package  

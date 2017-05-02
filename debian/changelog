@@ -1,3 +1,10 @@
+scaleway-ubuntukernel (1.1-1) unstable; urgency=medium
+
+  * fix parsing of Scaleway IPXE script (by github.com/ivan)
+  * get current kernel by reading /vmlinuz link
+
+ -- root <root@unknown>  Thu, 16 Mar 2017 15:52:21 +0000
+
 scaleway-ubuntukernel (1.0-1) unstable; urgency=medium
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
