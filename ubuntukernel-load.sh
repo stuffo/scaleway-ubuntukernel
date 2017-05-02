@@ -44,7 +44,7 @@ rebuild_initrd() {
     local workdir=$(mktemp -d)
 
     # get original initrd url from IPXE
-    local orig_initrd=$(curl -s $SCW_IPXE_SCRIPT | grep ^initrd | cut -f2 -d" ")
+    local orig_initrd=$(curl -s $SCW_IPXE_SCRIPT | grep ^initrd | grep -P -o 'http://\S+')
     log "Scaleway initrd: $orig_initrd"
 
     log "+ get scaleway initrd"
