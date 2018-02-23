@@ -125,6 +125,15 @@ sanity_checks() {
     if [ ! -x /run/initramfs/sbin/kexec ] ; then
         fatal "current initrd has no kexec binary. kexec will fail."
     fi
+
+    exit_if_disabled
+}
+
+# kill switch 
+exit_if_disabled() {
+    if scw-metadata |grep -q "TAGS_[[:digit:]]=ubuntukernel_disabled" ; then
+        fatal "ubuntukernel load disabled via server tag."
+    fi
 }
 
 # 
