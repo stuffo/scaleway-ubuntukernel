@@ -8,7 +8,7 @@
 
 # kernel modules to add to the Scaleway initrd to allow Ubuntu kernel to mount
 # nbd devices. Path prefix is /lib/modules/<kernel version>
-REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd"
+REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd dca/dca i2c/algos/i2c-algo-bit pps/pps_core ptp/ptp net/ethernet/intel/igb/igb"
 
 # current Scaleway IPXE boot script
 SCW_IPXE_SCRIPT="http://169.254.42.42/ipxe"
