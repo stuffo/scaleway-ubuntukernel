@@ -31,10 +31,20 @@ Uninstall
 Either remove the package or just disable the service:
 ``systemctl disable scaleway-ubuntukernel``
 
-Debugging
-=========
+Troubleshooting
+===============
 You can run ubuntukernel-load.sh manually as root. It is quite verbose. Be 
 aware that your system will reboot (kexec) if all went fine.
+
+If your initrd or kernel is bad you can get stuck with a non booting system.
+Add a server tag in the Scaleway webui with the name `ubuntukernel_disabled`
+and kexec won't be executed on bootup anymore.  
+
+Other usefull Scaleway related tags are `INITRD_POST_SHELL=1` which will drop 
+you in a shell after the whole initrd shebang is done so you can tinker with 
+your filesystem. Also consider `INITRD_VERBOSE=1` to make initrd more verbose.
+`INITRD_DEBUG=1` is maximum verbose and will trace all commands that get 
+executed in initrd.
 
 Build
 =====
