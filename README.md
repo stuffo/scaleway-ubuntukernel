@@ -19,10 +19,10 @@ Install
 2. You can skip this step if you already installed any kernel package providing linux-image. 
    Otherwise, get some Ubuntu kernel. E.g. current mainline kernels from http://kernel.ubuntu.com/~kernel-ppa/mainline:  
    ``curl -LO http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.3/linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb``  
-   ``apt install ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``
+   ``apt install ./linux-image-4.10.3-041003-generic_4.10.3-041003.201703142331_amd64.deb ``  
    Ignore/dismiss all Grub related setup messages, you don't need it.
 3. Install this package:  
-   ``apt install ./scaleway-ubuntukernel_1.1-1_amd64.deb ``
+   ``apt install ./scaleway-ubuntukernel_1.1-1_amd64.deb ``  
    Say No when asked about using Kexec reboot, it will interfere with this kexec service.
 4. Make sure Ubuntu kexec service is disabled. Required as Ubuntu will kexec too early and leave a dirty filesystem.
    `` systemctl disable kexec ``
