@@ -6,9 +6,10 @@
 # Location: https://github.com/stuffo/scaleway-ubuntukernel
 #
 
-# kernel modules to add to the Scaleway initrd to allow Ubuntu kernel to mount
-# nbd devices. Path prefix is /lib/modules/<kernel version>
-REQUIRED_MODULES="net/virtio_net block/virtio_blk block/nbd dca/dca i2c/algos/i2c-algo-bit pps/pps_core ptp/ptp net/ethernet/intel/igb/igb"
+# kernel modules to add to the Scaleway initrd to enable Arch kernel network 
+# and to mount nbd devices. If module is missing, we skip it as it may be a 
+# kernel that does not require it. Path prefix is /lib/modules/<kernel version>
+REQUIRED_MODULES="net/phy/phylink net/virtio_net block/virtio_blk block/nbd dca/dca i2c/algos/i2c-algo-bit pps/pps_core ptp/ptp net/ethernet/intel/igb/igb"
 
 # current Scaleway IPXE boot script
 SCW_IPXE_SCRIPT="http://169.254.42.42/ipxe"
@@ -60,10 +61,14 @@ rebuild_initrd() {
     local initrd_mod_dir="$initrd_dir/lib/modules/$UBUNTU_KERNEL_VERSION"
     mkdir -p $initrd_mod_dir
     for mod in $REQUIRED_MODULES ; do
-        log "+ add module $mod to initrd"
-        modname=$(basename $mod).ko
-        cp /lib/modules/$UBUNTU_KERNEL_VERSION/kernel/drivers/$mod.ko $initrd_mod_dir/$modname
-        insmod_command=$insmod_command"insmod /lib/modules/$UBUNTU_KERNEL_VERSION/$modname\n"
+        if [ -e /lib/modules/$UBUNTU_KERNEL_VERSION/kernel/drivers/$mod.ko.gz ] ; then
+            log "+ add module $mod to initrd"
+            modname=$(basename $mod).ko
+            cp /lib/modules/$UBUNTU_KERNEL_VERSION/kernel/drivers/$mod.ko $initrd_mod_dir/$modname
+            insmod_command=$insmod_command"insmod /lib/modules/$UBUNTU_KERNEL_VERSION/$modname\n"
+        else
+            log "+ skipping module $mod for initrd. not found."
+        fi
     done
 
     log "+ prepend loading modules before entering scaleway initrd"
