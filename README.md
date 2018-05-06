@@ -6,6 +6,10 @@ missing modules and features. Why not use standard Ubuntu kernels instead?
 With this package you can use standard Ubuntu kernels on your Scaleway x86_64
 instances by the magic of KEXEC. 
 
+Be aware that you don't need all of this if you are using the newer Scaleway
+locally booted instances (eg. START1). This instances use the distributions 
+kernel anyhow.
+
 Requirements
 ============
 Just make sure your current Scaleway kernel has KEXEC support. 
